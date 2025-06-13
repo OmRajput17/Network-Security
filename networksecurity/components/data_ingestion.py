@@ -1,4 +1,4 @@
-import pymongo.mongo_client
+from pymongo.mongo_client import MongoClient
 from networksecurity.exception.exception import NetworkSecurityException
 from networksecurity.logging.logger import logging
 
@@ -36,7 +36,7 @@ class DataIngestion:
         try:
             database_name = self.data_ingestion_config.database_name
             collection_name = self.data_ingestion_config.collection_name
-            self.mongo_client = pymongo.mongo_client(MONGO_DB_URL)
+            self.mongo_client = MongoClient(MONGO_DB_URL)
             collection = self.mongo_client[database_name][collection_name]
 
             df = pd.DataFrame(list(collection.find()))
