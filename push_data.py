@@ -56,7 +56,7 @@ class NetworkDataExtract:
 if __name__ == '__main__':
     FILE_PATH = 'NewtorkData\phisingData.csv'
     DATA_BASE = 'NETWORK'
-    Collection = 'NewtorkData'
+    Collection = 'NetworkData'
     networkobj = NetworkDataExtract()
     records = networkobj.csv_to_json_converter(filepath=FILE_PATH)
     print(records)
