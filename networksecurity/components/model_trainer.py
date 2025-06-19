@@ -22,6 +22,7 @@ from sklearn.ensemble import(
     GradientBoostingClassifier,
     RandomForestClassifier
 )
+import mlflow
 
 class ModelTrainer:
     def __init__(self, data_transformation_artifact: DataTransformationArtifact,
@@ -31,6 +32,26 @@ class ModelTrainer:
             self.data_transformation_artifact = data_transformation_artifact
         except Exception as e:
             raise NetworkSecurityException(e, sys)
+        
+    def track_mlflow(self, best_model, classsification_metrics):
+        with mlflow.start_run():
+            f1_score = classsification_metrics.f1_score
+            recall_score = classsification_metrics.recall_score
+            precision_score = classsification_metrics.precision_score
+
+            ## Log the Metrics
+            mlflow.log_metric("f1_score", f1_score, )
+            mlflow.log_metric("recall_score", recall_score, )
+            mlflow.log_metric("Precision_score",precision_score, )
+
+            ## Log the parameters
+            if hasattr(best_model, "get_params"):
+                params = best_model.get_params()
+                mlflow.log_params(params)
+
+            mlflow.sklearn.log_model(best_model,"model")
+
+
         
     def train_model(self, x_train, y_train, x_test, y_test):
         models = {
@@ -84,9 +105,14 @@ class ModelTrainer:
         y_train_pred = best_model.predict(x_train)
         classification_train_metric = get_classification_report(y_true=y_train, y_pred= y_train_pred)
 
-        ##track the MLFlow
+        ##track the experiments with MLFlow
+
+        self.track_mlflow(best_model, classification_train_metric)
+
+
         y_test_pred = best_model.predict(x_test)
         classification_test_metric = get_classification_report(y_true=y_test, y_pred= y_test_pred)
+        self.track_mlflow(best_model, classification_test_metric)
 
         preprocessor = load_object(file_path=self.data_transformation_artifact.transformed_object_file_path)
 

@@ -8,5 +8,6 @@ pymongo[srv]==3.6
 pymongo
 pyYAML
 dill
+mlflow
 
 # -e .  
