@@ -126,6 +126,8 @@ class ModelTrainer:
 
         save_object(self.model_trainer_config.trained_model_file_path, Network_Model)
 
+        save_object("final_models/model.pkl", best_model)
+
         ## Model Trainer Artifact
         model_trainer_artifact =ModelTrainerArtifact(trained_model_file_path = self.model_trainer_config.trained_model_file_path,
                              train_metric_artifact = classification_train_metric,
