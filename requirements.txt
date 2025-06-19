@@ -4,10 +4,11 @@ numpy
 scikit-learn
 pymongo
 certifi
-pymongo[srv]==3.6
+pymongo[srv]
 pymongo
 pyYAML
 dill
 mlflow
+dagshub
 
 # -e .  

@@ -24,6 +24,10 @@ from sklearn.ensemble import(
 )
 import mlflow
 
+import dagshub
+dagshub.init(repo_owner='forcoding247', repo_name='Network-Secutiry', mlflow=True)
+
+
 class ModelTrainer:
     def __init__(self, data_transformation_artifact: DataTransformationArtifact,
                  model_trainer_config: ModelTrainerConfig):
@@ -49,13 +53,11 @@ class ModelTrainer:
                 params = best_model.get_params()
                 mlflow.log_params(params)
 
-            mlflow.sklearn.log_model(best_model,"model")
-
 
         
     def train_model(self, x_train, y_train, x_test, y_test):
         models = {
-            "Random Forest" : RandomForestClassifier(verbose=1),
+            "Random Forest" : RandomForestClassifier(n_jobs=-1, verbose=1),
             "Gradient Boost" : GradientBoostingClassifier(verbose=1),
             "Logistic Regression" : LogisticRegression(verbose=1),
             "Adaboost" : AdaBoostClassifier(),
@@ -66,12 +68,12 @@ class ModelTrainer:
             "Decision Tree" : {
                 'criterion' : ['gini','entropy', 'log_loss'],
                 # 'splitter' : ["best", "random"],
-                # "max_features":['sqrt', 'log2']
+                # "max_features":['sqrt', 'log2'],
             },
             "Random Forest" : {
                 'criterion' : ['gini','entropy', 'log_loss'],
                 # "max_features":['sqrt', 'log2', None],
-                "n_estimators" : [8, 16, 32, 64, 128, 256]
+                "n_estimators" : [8, 16, 32, 64, 128, 256],
             },
             "Gradient Boost" : {
                 # "loss" : ["log_loss", "exponential"],
@@ -79,9 +81,10 @@ class ModelTrainer:
                 'subsample': [0.6, 0.7, 0.75, 0.8, 0.85, 0.9],
                 # "criterion": ["friedman_mse", "squared_error"],
                 # "max_features":['sqrt', 'log2', auto],
-                "n_estimators" : [8, 16, 32, 64, 128, 256]
+                "n_estimators" : [8, 16, 32, 64, 128, 256],
             },
-            "Logistic Regression":{},
+            "Logistic Regression":{
+            },
             "Adaboost":{
                 "learning_rate": [0.1, 0.01, 0.05, 0.001],
                 "n_estimators" : [8, 16, 32, 64, 128, 256],
