@@ -60,6 +60,7 @@ async def train_route():
     except Exception as e:
         raise NetworkSecurityException(e, sys)
     
+
 @app.post("/predict")
 async def predict_route(request: Request, file: UploadFile = File(...)):
     try:
